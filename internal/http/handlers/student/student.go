@@ -8,11 +8,12 @@ import (
 	"net/http"
 
 	"github.com/go-playground/validator/v10"
+	"github.com/iconic-asf2910/student-api/internal/storage"
 	"github.com/iconic-asf2910/student-api/internal/types"
 	"github.com/iconic-asf2910/student-api/internal/utilis/response"
 )
 
-func New() http.HandlerFunc {
+func New(storage storage.Storage) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 
 		var student types.Student
