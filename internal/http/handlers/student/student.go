@@ -7,6 +7,7 @@ import (
 	"log/slog"
 	"net/http"
 
+	"github.com/go-playground/validator/v10"
 	"github.com/iconic-asf2910/student-api/internal/types"
 	"github.com/iconic-asf2910/student-api/internal/utilis/response"
 )
@@ -28,7 +29,13 @@ func New() http.HandlerFunc {
 			response.WriteJson(w, http.StatusBadRequest, response.GeneralError(err))
 		}
 
-		slog.Info("creating a student")
+		// request validation
+
+		if err := validator.New().Struct(student); err != nil {
+			validateErrs := err.(validator.ValidationErrors)
+			response.WriteJson(w, http.StatusBadRequest, response.ValidationError(validateErrs))
+			return
+		}
 
 		response.WriteJson(w, http.StatusCreated, map[string]string{"success": "OK"})
 	}
